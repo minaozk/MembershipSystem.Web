@@ -1,16 +1,21 @@
 ﻿using MembershipSystem.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using MembershipSystem.Web.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace MembershipSystem.Web.Controllers
 {
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
+		private readonly UserManager<AppUser> _userManager;
 
-		public HomeController(ILogger<HomeController> logger)
+		public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager)
 		{
 			_logger = logger;
+			_userManager = userManager;
 		}
 
 		public IActionResult Index()
@@ -21,6 +26,40 @@ namespace MembershipSystem.Web.Controllers
 		public IActionResult Privacy()
 		{
 			return View();
+		}
+
+		public IActionResult SignUp()
+		{
+
+			return View();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> SignUp(SignUpViewModel request)
+		{
+		
+		if (!ModelState.IsValid)
+		{
+			return View();
+		}
+		var identityResult = await _userManager.CreateAsync(new()
+			{
+				UserName = request.UserName,
+				PhoneNumber = request.Phone,
+				Email = request.Email,
+			},
+			request.PasswordConfirm);
+			if (identityResult.Succeeded)
+		{
+				TempData["SuccessMessage"] = "Üyelik kayıt işlemi başarıyla gerçekleşmiştir.";
+			return RedirectToAction(nameof(HomeController.SignUp));
+		}
+
+		foreach (IdentityError item in identityResult.Errors)
+		{
+			ModelState.AddModelError(string.Empty, item.Description);
+		}
+		return View();
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
