@@ -1,4 +1,6 @@
-﻿using MembershipSystem.Web.Models;
+﻿using MembershipSystem.Web.CustomValidations;
+using MembershipSystem.Web.Localizations;
+using MembershipSystem.Web.Models;
 
 namespace MembershipSystem.Web.Extensions
 {
@@ -18,7 +20,7 @@ namespace MembershipSystem.Web.Extensions
 				options.Password.RequireDigit = true;
 
 
-			}).AddEntityFrameworkStores<AppDbContext>();
+			}).AddPasswordValidator<PasswordValidator>().AddUserValidator<UserValidator>().AddErrorDescriber<LocalizationIdentityErrorDescriber>().AddEntityFrameworkStores<AppDbContext>();
 		}
 	}
 }
