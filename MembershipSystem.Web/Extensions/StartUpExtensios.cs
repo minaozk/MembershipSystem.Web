@@ -1,6 +1,7 @@
 ﻿using MembershipSystem.Web.CustomValidations;
 using MembershipSystem.Web.Localizations;
 using MembershipSystem.Web.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace MembershipSystem.Web.Extensions
 {
@@ -8,6 +9,10 @@ namespace MembershipSystem.Web.Extensions
 	{
 		public static void AddIdentityWithExt(this IServiceCollection services)
 		{
+			services.Configure<DataProtectionTokenProviderOptions>(options =>
+			{
+				options.TokenLifespan = TimeSpan.FromHours(2);
+			});
 			services.AddIdentity<AppUser, AppRole>(options =>
 			{
 				options.User.RequireUniqueEmail = true;
@@ -23,7 +28,11 @@ namespace MembershipSystem.Web.Extensions
 				options.Lockout.MaxFailedAccessAttempts = 3;
 
 
-			}).AddPasswordValidator<PasswordValidator>().AddUserValidator<UserValidator>().AddErrorDescriber<LocalizationIdentityErrorDescriber>().AddEntityFrameworkStores<AppDbContext>();
+			}).AddPasswordValidator<PasswordValidator>()
+				.AddUserValidator<UserValidator>()
+				.AddErrorDescriber<LocalizationIdentityErrorDescriber>()
+				.AddDefaultTokenProviders()
+				.AddEntityFrameworkStores<AppDbContext>();
 		}
 	}
 }
