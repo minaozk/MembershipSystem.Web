@@ -29,10 +29,12 @@ namespace MembershipSystem.Web.ViewModels
 		[DisplayName("Telefon Numarası:")]
 		public string Phone { get; set; }
 
+		[DataType(DataType.Password)]
 		[Required(ErrorMessage = "Şifre alanı boş bırakılamaz.")]
 		[DisplayName("Şifre: ")]
 		public string Password { get; set; }
 
+		[DataType(DataType.Password)]
 		[Compare(nameof(Password), ErrorMessage = "Şifreler uyuşmamaktadır.")]
 		[Required(ErrorMessage = "Şifre tekrar alanı boş bırakılamaz.")]
 		[DisplayName("Şifre Tekrar: ")]

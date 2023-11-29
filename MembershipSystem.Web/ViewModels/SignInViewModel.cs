@@ -18,7 +18,7 @@ namespace MembershipSystem.Web.ViewModels
 		[Display(Name = "Email")]
 		[EmailAddress(ErrorMessage = "Email formatı yanlıştır.")]
 		public string Email { get; set; }
-
+		[DataType(DataType.Password)]
 		[Required(ErrorMessage = "Şifre alanı boş bırakılamaz.")]
 		[Display(Name = "Şifre")]
 		public string Password { get; set; }
