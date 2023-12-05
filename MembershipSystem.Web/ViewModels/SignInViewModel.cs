@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MembershipSystem.Web.ViewModels
 {
@@ -21,6 +20,7 @@ namespace MembershipSystem.Web.ViewModels
 		[DataType(DataType.Password)]
 		[Required(ErrorMessage = "Şifre alanı boş bırakılamaz.")]
 		[Display(Name = "Şifre")]
+		[MinLength(6, ErrorMessage = "Şifreniz en az 6 karakter olabilir.")]
 		public string Password { get; set; }
 
 		[Display(Name = "Beni Hatırla")]

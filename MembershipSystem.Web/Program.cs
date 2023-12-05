@@ -1,7 +1,6 @@
 using MembershipSystem.Web.Extensions;
 using MembershipSystem.Web.Models;
 using Microsoft.EntityFrameworkCore;
-using MembershipSystem.Web.Models;
 using MembershipSystem.Web.OptionsModels;
 using MembershipSystem.Web.Services;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +13,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+	options.ValidationInterval = TimeSpan.FromMinutes(30);
 });
 
 

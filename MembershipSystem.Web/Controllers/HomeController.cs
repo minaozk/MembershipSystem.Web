@@ -5,10 +5,6 @@ using MembershipSystem.Web.Extensions;
 using MembershipSystem.Web.Services;
 using MembershipSystem.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using NuGet.Common;
 
 namespace MembershipSystem.Web.Controllers
 {
@@ -47,7 +43,11 @@ namespace MembershipSystem.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> SignIn(SignInViewModel model, string? returnUrl = null)
 		{
-			returnUrl = returnUrl ?? Url.Action("Index", "Home");
+			if (!ModelState.IsValid)
+			{
+				return View();
+			}
+			returnUrl ??= Url.Action("Index", "Home");
 			var hasUser = await _userManager.FindByEmailAsync(model.Email);
 
 			if (hasUser == null)
@@ -61,7 +61,7 @@ namespace MembershipSystem.Web.Controllers
 
 			if (signInResult.Succeeded)
 			{
-				return Redirect(returnUrl);
+				return Redirect(returnUrl!);
 			}
 
 			if (signInResult.IsLockedOut)
@@ -75,7 +75,7 @@ namespace MembershipSystem.Web.Controllers
 
 		return View();
 		}
-		public async Task<IActionResult> SignUp()
+		public IActionResult SignUp()
 		{
 
 			return View();
@@ -126,7 +126,7 @@ namespace MembershipSystem.Web.Controllers
 			var passwordResetLink = Url.Action("ResetPassword", "Home",
 				new { userId = hasUser.Id, Token = passwordResetToken }, HttpContext.Request.Scheme);
 			
-			await _emailService.SendResetPasswordEmail(passwordResetLink, hasUser.Email);
+			await _emailService.SendResetPasswordEmail(passwordResetLink!, hasUser.Email!);
 
 			TempData["SuccessMessage"] = "Şifre sıfırlama linki e-posta adresinize gönderilmiştir.";
 			return RedirectToAction(nameof(ForgetPassword));
@@ -146,8 +146,8 @@ namespace MembershipSystem.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> ResetPassword(ResetPasswordViewModel request)
 		{
-			string userId = TempData["userId"].ToString();
-			string token = TempData["token"].ToString();
+			var userId = TempData["userId"];
+			var token = TempData["token"];
 			
 			if (userId == null || token == null )
 			{
@@ -156,7 +156,7 @@ namespace MembershipSystem.Web.Controllers
 
 
 
-			var hasUser = await _userManager.FindByIdAsync(userId);
+			var hasUser = await _userManager.FindByIdAsync(userId.ToString()!);
 
 			if (hasUser == null)
 			{
@@ -164,7 +164,7 @@ namespace MembershipSystem.Web.Controllers
 				return View();
 			}
 
-			IdentityResult result = await _userManager.ResetPasswordAsync(hasUser, token, request.Password);
+			IdentityResult result = await _userManager.ResetPasswordAsync(hasUser, token.ToString()!, request.Password);
 
 			if (result.Succeeded)
 			{

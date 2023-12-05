@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using MembershipSystem.Web.Models;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace MembershipSystem.Web.ViewModels
 {
@@ -32,12 +30,14 @@ namespace MembershipSystem.Web.ViewModels
 		[DataType(DataType.Password)]
 		[Required(ErrorMessage = "Şifre alanı boş bırakılamaz.")]
 		[DisplayName("Şifre: ")]
+		[MinLength(6, ErrorMessage = "Şifreniz en az 6 karakter olabilir.")]
 		public string Password { get; set; }
 
 		[DataType(DataType.Password)]
 		[Compare(nameof(Password), ErrorMessage = "Şifreler uyuşmamaktadır.")]
 		[Required(ErrorMessage = "Şifre tekrar alanı boş bırakılamaz.")]
 		[DisplayName("Şifre Tekrar: ")]
+		[MinLength(6, ErrorMessage = "Şifreniz en az 6 karakter olabilir.")]
 		public string PasswordConfirm { get; set; }
 	}
 }

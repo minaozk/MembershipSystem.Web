@@ -2,7 +2,7 @@
 using MembershipSystem.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using UserViewModel = MembershipSystem.Web.Areas.Admin.Models.UserViewModel;
 
 namespace MembershipSystem.Web.Areas.Admin.Controllers
 {
